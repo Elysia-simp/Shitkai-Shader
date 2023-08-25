@@ -37,6 +37,8 @@ edge_out edge_model (edge_in i)
     o.pos = mul(i.pos, mmd_wvp);
     o.vertex = i.vertexcolor;
     o.uv = i.uv;
+    if(use_subtexture){
+    o.uv.x *= 0.5;}
     return o;
 }
 
