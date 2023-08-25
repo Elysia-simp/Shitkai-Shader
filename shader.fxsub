@@ -1,0 +1,124 @@
+//i separated everything so that if you wanted to study the shader all you had to do was look at each include individually
+//rather than look at a huge ass mess
+
+//includes
+#include <header/header.fxh>
+//
+
+//base structure
+struct vs_in
+{
+    float4 pos          : POSITION;
+    float3 normal       : NORMAL;
+    float2 uv            : TEXCOORD0;
+    float4 vertexcolor   : TEXCOORD2; 
+};
+
+
+struct vs_out
+{
+    float4 pos          : POSITION;
+    float2 uv           : TEXCOORD0;
+    float4 vertex       : TEXCOORD1;
+    float3 normal       : TEXCOORD2;
+    float3 view         : TEXCOORD3;
+    float4 ppos         : TEXCOORD4; //hgshadow stuff idk if anything else uses ppos
+};
+
+vs_out vs_model ( vs_in i)
+{
+    vs_out o = (vs_out)0; //you're not mentally sane if you write this as INPUT/OUTPUT
+    o.pos = mul(i.pos, mmd_wvp);
+    o.uv = i.uv;
+    if(use_subtexture){
+        o.uv.x *= 0.5;
+    }
+	o.normal = normalize(mul((float3x3) mmd_world, i.normal));
+    o.view = normalize(mmd_cameraPosition - mul(i.pos.xyz, (float3x3)mmd_world));
+    o.ppos = o.pos;
+    o.vertex = i.vertexcolor;
+    return o;
+}
+#include <shared/shitkai-common.fxsub>
+#include <shared/shitkai-outline.fxsub>
+
+bool light_check : CONTROLOBJECT < string name = "Rim_Light.pmx"; >;
+float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : COLOR0
+{
+    float2 uv = i.uv;
+    float3 normal = i.normal / vface;
+    float3 view = i.view;
+
+    float ndotl = dot(normal, -light_d) * 0.5 + 0.5;
+    float ndotv = max(dot(normal,view), 0.0);
+    ndotv = (-ndotv) + 1.0f;
+
+    float4 color = 1;
+    float4 diffuse = tex2D(diffuseSampler, uv);
+    float4 HTex = tex2D(HTexSampler, uv);
+    float4 Shadow_Tex = tex2D(ShadowSampler, uv);
+
+    float3 shadow = Shitkai_Shadow(ndotl, HTex.z);
+    
+
+    float rim = 0;
+    if(light_check){    rim = saturate(Shitkai_Rim(ndotv, normal));}
+    float3 diffuse_col = diffuse + (-Shadow_Tex);
+    
+    shadow = saturate(shadow * diffuse_col + Shadow_Tex);
+    //skin coloring
+
+    float3 skin_col = Shitkai_Coloring(shadow, HTex.x);
+
+    color.rgb *= skin_col + ((rim * 0.25) * i.vertex.y);
+    //color.rgb = i.vertex.y;
+    //color.rgb = i.vertex.z;
+    //color.rgb = colorTable[_CharacterId];
+    color.rgb =skin_col;
+    if(Stencil_enable)    clip(i.vertex.z - 0.45f);
+    return color;
+}
+
+technique model_SS_tech <string MMDPASS = "object_ss"; >
+{
+    pass main
+    {
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model(false);
+    }
+    pass stencil
+    {
+        ZEnable = false;
+        cullmode = ccw;
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model(true);
+    }
+    pass edge
+    {
+        cullmode = cw;
+        VertexShader = compile vs_3_0 edge_model();
+        PixelShader = compile ps_3_0 ps_edge();
+    }
+}
+
+technique model_tech <string MMDPASS = "object"; >
+{
+    pass main
+    {
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model(false);
+    }
+    pass stencil
+    {
+        ZEnable = false;
+        cullmode = ccw;
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model(true);
+    }
+    pass edge
+    {
+        cullmode = cw;
+        VertexShader = compile vs_3_0 edge_model();
+        PixelShader = compile ps_3_0 ps_edge();
+    }
+}

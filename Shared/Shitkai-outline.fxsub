@@ -1,0 +1,53 @@
+struct edge_in
+{
+    float4 pos          : POSITION;
+    float3 normal       : NORMAL;
+    float2 uv           : TEXCOORD0;
+    float4 vertexcolor  : TEXCOORD2; 
+};
+
+
+struct edge_out
+{
+    float4 pos          : POSITION;
+    float4 vertex       : TEXCOORD0;
+    float2 uv           : TEXCOORD1;
+};
+
+float Outline_Scale(float4 pos)
+{
+    float4 View = mul(pos, mul(model_world, mmd_view));
+
+    float scale = View.z / View.w * 0.75;
+
+    //scale = clamp(scale, 0.03 , 5);
+        if(mmd_p[3].w) // perspective check
+    {
+        scale = 30; // perspective off
+    } 
+
+    return scale;
+
+}
+
+edge_out edge_model (edge_in i)
+{
+    edge_out o;
+    i.pos.xyz = i.pos.xyz + normalize(i.normal.xyz) * _OutlineWidth * i.vertexcolor.x * Outline_Scale(i.pos);
+    o.pos = mul(i.pos, mmd_wvp);
+    o.vertex = i.vertexcolor;
+    o.uv = i.uv;
+    return o;
+}
+
+
+float4 ps_edge(edge_out i) : COLOR0
+{
+    
+    float4 color = tex2D(ShadowSampler, i.uv);
+    float4 Colormask = tex2D(HTexSampler, i.uv).x;
+    color.xyz = Shitkai_Coloring(color.xyz,Colormask);
+    color.xyz *= _OutlineL;
+    //clip(i.vertex.x - (0.45f));
+    return color * egColor;
+}
