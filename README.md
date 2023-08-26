@@ -15,6 +15,8 @@ if your model's head has an accessory texture causing it to display wrong set th
 
 anything else will work normally for anything that doesn't need it
 
+For rimlight you NEED to load the rimlight specified in your material file. Otherwise it won't load (it looks weird when defaulted to mmd light dir)
+
 # Credits
 
 Me (Chi/Chips/Chizukimo) for decompiling and adapting for MMD.
