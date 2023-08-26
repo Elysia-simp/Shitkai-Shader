@@ -57,7 +57,7 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
     float ndotv = max(dot(normal,view), 0.0);
     ndotv = (-ndotv) + 1.0f;
 
-    float4 color = lerp(egColor, float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
+    float4 out_col = lerp(float4(egColor.xyz, 1.0f), float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
 
     float4 diffuse = tex2D(diffuseSampler, uv);
     float4 HTex = tex2D(HTexSampler, uv);
@@ -75,10 +75,10 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
     //skin coloring
     float3 skin_col = Shitkai_Coloring(shadow, HTex.x);
 
-//    ambient = Ambient_Enable? (ambient) : 1.0;
-    color.rgb *= saturate(skin_col) + ((rim * (_RimCol + float3(Rim_R, Rim_G, Rim_B))) * max(i.vertex.y - Rim_Intensity, 0.0));
+    out_col.xyz *= saturate(skin_col) + ((rim * (_RimCol + float3(Rim_R, Rim_G, Rim_B))) * max(i.vertex.y - Rim_Intensity, 0.0));
+    
     if(Stencil_enable && i.vertex.z < 1)  discard;
-    return color;
+    return out_col;
 }
 
 technique model_SS_tech <string MMDPASS = "object_ss"; >

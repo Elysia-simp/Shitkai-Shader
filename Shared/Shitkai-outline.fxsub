@@ -48,13 +48,13 @@ edge_out edge_model (edge_in i)
 float4 ps_edge(edge_out i) : COLOR0
 {
     
-    float4 color = lerp(egColor, float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
+    float4 out_col = lerp(egColor, float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
 
-    color.xyz = tex2D(ShadowSampler, i.uv).xyz;
+    out_col.xyz *= tex2D(ShadowSampler, i.uv).xyz;
     float4 Colormask = tex2D(HTexSampler, i.uv).x;
-    color.xyz = Shitkai_Coloring(color.xyz,Colormask);
+    out_col.xyz = Shitkai_Coloring(out_col.xyz,Colormask);
 
-    color.xyz *= _OutlineL;
+    out_col.xyz *= _OutlineL;
     //clip(i.vertex.x - (0.45f));
-    return color * egColor;
+    return out_col;
 }
