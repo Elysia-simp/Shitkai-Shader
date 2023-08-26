@@ -67,7 +67,7 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
     
 
     float rim = 0;
-    if(light_check) rim = Shitkai_Rim(ndotv, normal);
+    if(light_check) rim = Shitkai_Rim(ndotv, normal, view);
     float3 diffuse_col = diffuse + (-Shadow_Tex);
     
     shadow = saturate(shadow * diffuse_col + Shadow_Tex);

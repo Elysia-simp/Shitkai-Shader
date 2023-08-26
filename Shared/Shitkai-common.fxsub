@@ -46,28 +46,26 @@ float3 Shitkai_Coloring(float3 shadow, float x){
 
 float4x4 light_bone : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_Rot"; >;
 
-float Shitkai_Rim(float ndotv, float3 normal){
-    float rim_mask = dot(normal, -normalize(light_bone._31_32_33) );
-    rim_mask  = max(rim_mask,0.0);
-    float rim_mask2 = dot(normal, -normalize(light_bone._31_32_33) );
-    rim_mask2 = max(rim_mask2,0.0);
+float Shitkai_Rim(float ndotv, float3 normal, float3 view) {
+    float3 lightDirection = normalize(light_bone._31_32_33);
+    float rim_mask = max(0.0, -dot(normal, lightDirection));
+    float rim_mask2 = max(0.0, -dot(normal, lightDirection));
 
-    rim_mask = (-rim_mask) + 0.0500000007f;
-    
-    float u_xlati2 = step(0.0f, rim_mask);
-    float u_xlati19 = step(rim_mask, 0.0f);
+    rim_mask = 0.0500000007 - rim_mask;
 
-    u_xlati19 = (-u_xlati2) + u_xlati19;
+    float u_xlati2 = step(0.0, rim_mask);
+    float u_xlati19 = 1.0 - u_xlati2;
+
     ndotv *= u_xlati19;
-    ndotv = rim_mask2 * ndotv;
+    ndotv *= rim_mask2;
 
-    bool check = ndotv>=_RimThreshold;
-    ndotv = check ? 1.0 : 0.0;
-    
+    //bool check = ndotv >= _RimThreshold;
+    //ndotv = check ? 1.0 : 0.0;
+    ndotv = step(_RimThreshold, ndotv);
 
     return ndotv;
-
 }
+
 
 
 float test(float ndotl, float ndotv){
