@@ -27,7 +27,7 @@ struct vs_out
 
 vs_out vs_model ( vs_in i)
 {
-    vs_out o = (vs_out)0; //you're not mentally sane if you write this as INPUT/OUTPUT
+    vs_out o; //you're not mentally sane if you write this as INPUT/OUTPUT
     o.pos = mul(i.pos, mmd_wvp);
     o.uv = i.uv;
     if(use_subtexture){
@@ -49,30 +49,33 @@ bool controller_check : CONTROLOBJECT < string name = "controller.pmx"; >;
 
 float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : COLOR0
 {
+    //you know damn well
     float2 uv = i.uv;
     float3 normal = i.normal / vface;
     float3 view = i.view;
 
+    //dots
     float ndotl = dot(normal, -light_d) * 0.5 + 0.5;
-    float ndotv = max(dot(normal,view), 0.0);
-    ndotv = (-ndotv) + 1.0f;
+    float ndotv = max(1.0f - dot(normal,view), 0.0);
+    
+    //intitialize output color with ambient and egColor
+    float4 out_col = lerp(egColor, float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
 
-    float4 out_col = lerp(float4(egColor.xyz, 1.0f), float4(Ambient_R, Ambient_G, Ambient_B, 1.0), Ambient_Dark);
-
+    // Textures
     float4 diffuse = tex2D(diffuseSampler, uv);
     float4 HTex = tex2D(HTexSampler, uv);
     float4 Shadow_Tex = tex2D(ShadowSampler, uv);
 
-    float3 shadow = Shitkai_Shadow(ndotl, HTex.z);
-    
 
     float rim = 0;
-    if(light_check) rim = Shitkai_Rim(ndotv, normal, view);
+    if(light_check) rim = Shitkai_Rim(ndotv, normal, view); // no buts
+
+    // Shadow calc
+    float3 shadow = Shitkai_Shadow(ndotl, HTex.z);
     float3 diffuse_col = diffuse + (-Shadow_Tex);
-    
     shadow = saturate(shadow * diffuse_col + Shadow_Tex);
 
-    //skin coloring
+    // Skin coloring
     float3 skin_col = Shitkai_Coloring(shadow, HTex.x);
 
     out_col.xyz *= saturate(skin_col) + ((rim * (_RimCol + float3(Rim_R, Rim_G, Rim_B))) * max(i.vertex.y - Rim_Intensity, 0.0));
