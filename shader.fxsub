@@ -39,10 +39,14 @@ vs_out vs_model ( vs_in i)
     o.vertex = i.vertexcolor;
     return o;
 }
+
 #include <shared/shitkai-common.fxsub>
 #include <shared/shitkai-outline.fxsub>
 
-bool light_check : CONTROLOBJECT < string name = "Rim_Light.pmx"; >;
+
+bool light_check : CONTROLOBJECT < string name = RimLight_Bone; >;
+bool controller_check : CONTROLOBJECT < string name = "controller.pmx"; >;
+
 float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : COLOR0
 {
     float2 uv = i.uv;
@@ -53,7 +57,7 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
     float ndotv = max(dot(normal,view), 0.0);
     ndotv = (-ndotv) + 1.0f;
 
-    float4 color = 1;
+    float4 color = egColor;
     float4 diffuse = tex2D(diffuseSampler, uv);
     float4 HTex = tex2D(HTexSampler, uv);
     float4 Shadow_Tex = tex2D(ShadowSampler, uv);
@@ -62,19 +66,16 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
     
 
     float rim = 0;
-    if(light_check){    rim = saturate(Shitkai_Rim(ndotv, normal));}
+    if(light_check) rim = Shitkai_Rim(ndotv, normal);
     float3 diffuse_col = diffuse + (-Shadow_Tex);
     
     shadow = saturate(shadow * diffuse_col + Shadow_Tex);
+
     //skin coloring
-
     float3 skin_col = Shitkai_Coloring(shadow, HTex.x);
-
-    color.rgb *= skin_col + ((rim * 0.25) * i.vertex.y);
-    //color.rgb = i.vertex.y;
-    //color.rgb = i.vertex.z;
-    //color.rgb = colorTable[_CharacterId];
-    color.rgb =skin_col;
+    float3 ambient = Ambient_Enable ? (float3(1-Ambient_R, 1-Ambient_G, 1-Ambient_B) * (Ambient_Dark)): 0.0;
+//    ambient = Ambient_Enable? (ambient) : 1.0;
+    color.rgb *= saturate(skin_col - ambient) + ((rim * (_RimCol + float3(Rim_R, Rim_G, Rim_B))) * max(i.vertex.y - Rim_Intensity, 0.0));
     if(Stencil_enable)    clip(i.vertex.z - 0.45f);
     return color;
 }

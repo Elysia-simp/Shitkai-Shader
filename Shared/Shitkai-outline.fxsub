@@ -1,3 +1,5 @@
+#include <shared/controllers.fxsub>
+
 struct edge_in
 {
     float4 pos          : POSITION;
@@ -49,7 +51,8 @@ float4 ps_edge(edge_out i) : COLOR0
     float4 color = tex2D(ShadowSampler, i.uv);
     float4 Colormask = tex2D(HTexSampler, i.uv).x;
     color.xyz = Shitkai_Coloring(color.xyz,Colormask);
-    color.xyz *= _OutlineL;
+    float3 ambient = Ambient_Enable ? float3(1-Ambient_R, 1-Ambient_G, 1-Ambient_B) * (Ambient_Dark): 0.0;
+    color.xyz *= _OutlineL * ambient;
     //clip(i.vertex.x - (0.45f));
     return color * egColor;
 }

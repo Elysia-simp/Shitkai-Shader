@@ -1,15 +1,12 @@
 #include <shared/colors.fxsub>
 
-float Shitkai_Shadow(float ndotl, float value){
-    value = value * 2.0 + -1.0;
-    float shadow = ndotl + value;
-    shadow = saturate(shadow);
-
-    bool check = shadow>=0.40625;
-    shadow = check ? 1.0 : 0.0;
-
-    return shadow;
+float Shitkai_Shadow(float ndotl, float value) {
+    float shadow = ndotl + value * 2.0 - 1.0;
+    shadow = clamp(shadow, 0.0, 1.0);
+    return step(0.40625, shadow);
 }
+
+
 
 
 float3 Shitkai_Coloring(float3 shadow, float x){
@@ -21,10 +18,12 @@ float3 Shitkai_Coloring(float3 shadow, float x){
     #ifdef _DefaultSkinColor
     DefaultSkinColor = _DefaultSkinColor;
     #endif
+
     float3 Shadow1SkinColor = skinShadow1Table[_CharacterId];
     #ifdef _Shadow1SkinColor
     Shadow1SkinColor = _Shadow1SkinColor;
     #endif
+
     float3 Shadow2SkinColor = skinShadow2Table[_CharacterId];
     #ifdef _Shadow2SkinColor
     Shadow2SkinColor = _Shadow2SkinColor;
@@ -45,7 +44,7 @@ float3 Shitkai_Coloring(float3 shadow, float x){
     return Color1;
 }
 
-float4x4 light_bone : CONTROLOBJECT < string name = "Rim_Light.pmx"; string item = "Rim_Rot"; >;
+float4x4 light_bone : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_Rot"; >;
 
 float Shitkai_Rim(float ndotv, float3 normal){
     float rim_mask = dot(normal, -normalize(light_bone._31_32_33) );
@@ -68,4 +67,13 @@ float Shitkai_Rim(float ndotv, float3 normal){
 
     return ndotv;
 
+}
+
+
+float test(float ndotl, float ndotv){
+    return 1.0;
+}
+
+float3 test(float3 ndotl, float3 ndotv){
+    return float3(1.0f,1.0f,1.0f);
 }
