@@ -9,7 +9,7 @@
 // if you uncomment these they'll override _CharacterId
 
 #define _RimThreshold 0.2
-#define _RimCol float3(0.2, 0.2, 0.2) //they get this perstage so i'm told so?
+#define _RimCol float3(0.0, 0.0, 0.0) //if you're not using rim anims from the game please use this
 
 #define _OutlineWidth 0.001f
 #define _OutlineL     0.5f

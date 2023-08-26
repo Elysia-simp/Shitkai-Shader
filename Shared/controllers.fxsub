@@ -2,8 +2,7 @@ float Rim_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_R 
 float Rim_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_G +"; >; 
 float Rim_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_B +"; >; 
 float Rim_Intensity : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_Intensity"; >; 
-float Ambient_Enable : CONTROLOBJECT < string name =  "Controller.pmx"; string item = "Enable_Ambient"; >; 
-float Ambient_R : CONTROLOBJECT < string name = "Controller.pmx"; string item = "Ambient_R +"; >; 
-float Ambient_G : CONTROLOBJECT < string name = "Controller.pmx"; string item = "Ambient_G +"; >; 
-float Ambient_B : CONTROLOBJECT < string name = "Controller.pmx"; string item = "Ambient_B +"; >; 
-float Ambient_Dark : CONTROLOBJECT < string name = "Controller.pmx"; string item = "Ambient_Dark +"; >; 
+float Ambient_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "Ambient_R +"; >; 
+float Ambient_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "Ambient_G +"; >; 
+float Ambient_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "Ambient_B +"; >; 
+float Ambient_Dark : CONTROLOBJECT < string name = RimLight_Bone; string item = "Ambient_Dark +"; >; 
