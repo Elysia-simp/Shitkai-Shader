@@ -22,7 +22,6 @@ struct vs_out
     float4 vertex       : TEXCOORD1;
     float3 normal       : TEXCOORD2;
     float3 view         : TEXCOORD3;
-    float4 ppos         : TEXCOORD4; //hgshadow stuff idk if anything else uses ppos
 };
 
 vs_out vs_model ( vs_in i)
@@ -35,7 +34,6 @@ vs_out vs_model ( vs_in i)
     }
 	o.normal = normalize(mul((float3x3) mmd_world, i.normal));
     o.view = normalize(mmd_cameraPosition - mul(i.pos.xyz, (float3x3)mmd_world));
-    o.ppos = o.pos;
     o.vertex = i.vertexcolor;
     return o;
 }
