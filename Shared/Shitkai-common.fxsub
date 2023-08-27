@@ -1,4 +1,4 @@
-#include <shared/colors.fxsub>
+#include <shared/Shitkai-colors.fxsub>
 
 float Shitkai_Shadow(float ndotl, float value) {
     float shadow = ndotl + value * 2.0 - 1.0;
