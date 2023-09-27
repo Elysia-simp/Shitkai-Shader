@@ -6,9 +6,6 @@ float Shitkai_Shadow(float ndotl, float value) {
     return step(0.40625, shadow);
 }
 
-
-
-
 float3 Shitkai_Coloring(float3 shadow, float x){
     float3 Color1 = saturate(shadow.x * shadow.x);
     float3 Color2 = saturate(shadow.x * 2.0 + -1.0);
@@ -49,7 +46,7 @@ float4x4 light_bone : CONTROLOBJECT < string name = RimLight_Bone; string item =
 float Shitkai_Rim(float ndotv, float3 normal, float3 view) {
     float3 lightDirection = normalize(light_bone._31_32_33);
     float rim_mask = max(0.0, -dot(normal, lightDirection));
-    float rim_mask2 = max(0.0, -dot(normal, lightDirection));
+    float rim_mask2 = max(0.0, -dot(normal, lightDirection)); // i understand but?
 
     rim_mask = 0.0500000007 - rim_mask;
 
@@ -61,17 +58,7 @@ float Shitkai_Rim(float ndotv, float3 normal, float3 view) {
 
     //bool check = ndotv >= _RimThreshold;
     //ndotv = check ? 1.0 : 0.0;
-    ndotv = step(_RimThreshold, ndotv);
+    ndotv = step(_RimThreshold, ndotv); // this effectively does the same thing as above
 
     return ndotv;
-}
-
-
-
-float test(float ndotl, float ndotv){
-    return 1.0;
-}
-
-float3 test(float3 ndotl, float3 ndotv){
-    return float3(1.0f,1.0f,1.0f);
 }
