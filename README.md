@@ -1,8 +1,8 @@
 # Why?
 
-The only repositories I found were inaccurate or did not use features correctly as the original shader does
+For v1 all repositories were not that accurate
 
-and was typically bloated with other useless features, kept mines straight to the point with simple QOL changes
+for v3... Nobody else had done it
 
 
 # Usage
