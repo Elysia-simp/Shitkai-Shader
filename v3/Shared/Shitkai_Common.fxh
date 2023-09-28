@@ -1,13 +1,21 @@
 #include<Shared/Colors.hlsl>
 
 
+float4x4 head : CONTROLOBJECT < string name = "(self)"; string item = "頭"; >;
 float face_shading(in float2 uv)
 {
+
     light_d = mul(light_d, (float3x3)light_bone);
+
+
     // sample textures for both directions
     float shadow_right = tex2Dlod(faceShadowSampler, float4(uv, 0.0f, 0.0f));
     float shadow_left  = tex2Dlod(faceShadowSampler, float4(1.0f - uv.x, uv.y, 0.0f, 0.0f));
+    #ifdef force_front_light
+        if (shadow_right > 0.35) shadow_right = 1;
+        if (shadow_left > 0.35) shadow_left = 1;
 
+    #endif
 
     // get bone forward and right rotations 
     float3 head_right  = head_bone._11_12_13;
@@ -41,8 +49,13 @@ float face_shading(in float2 uv)
 
     // float shadow_step = step(angle, shadow) ;
     float shadow_step = smoothstep(angle - (0.001f), angle + (0.001f), shadow);
-    float facing_step = step(fdotl, 0.0f);
+    float facing_step = 0;
 
+    #ifdef force_front_light
+    facing_step = step(fdotl, 0.5f);
+    #else
+    facing_step = step(fdotl, 0.0f);
+    #endif
     shadow_step = shadow_step * facing_step;
     //=============================================
 

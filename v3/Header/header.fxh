@@ -12,6 +12,7 @@ float4x4 mmd_vp : VIEWPROJECTION;
 float4x4 model_world : CONTROLOBJECT < string name = "(self)"; >;
 float3 mmd_cameraPosition : POSITION < string Object = "Camera"; >;
 bool use_subtexture;
+bool use_spheremap;
 //mmd RGB lighting intake
 float4 egColor;
 
