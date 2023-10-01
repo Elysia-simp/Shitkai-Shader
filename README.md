@@ -17,7 +17,7 @@ Place _S texture in TOON in your model
 
 For v1 rimlight you NEED to load the rimlight specified in your material file. Otherwise it won't load (it looks weird when defaulted to mmd light dir)
 
-For v3 this is not an issue and can use mmd light_dir normally
+For v3 this is not an issue and can use mmd light_dir normally if you so choose
 
 # Credits
 
