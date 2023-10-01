@@ -1,1 +1,18 @@
-//dummy data
+float Rim_Light_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_LIGHT_R"; >; 
+float Rim_Light_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_LIGHT_G"; >; 
+float Rim_Light_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_LIGHT_B"; >; 
+float Rim_Shadow_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_SHADOW_R"; >; 
+float Rim_Shadow_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_SHADOW_G"; >; 
+float Rim_Shadow_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_SHADOW_B"; >; 
+float Rim_Intensity : CONTROLOBJECT < string name = RimLight_Bone; string item = "RIM_INT"; >; 
+float Ambient_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "AMBIENT_R"; >; 
+float Ambient_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "AMBIENT_G"; >; 
+float Ambient_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "AMBIENT_B"; >; 
+float Ambient_Int : CONTROLOBJECT < string name = RimLight_Bone; string item = "AMBIENT_INT"; >; 
+float Shadow_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "SHADOW_COL_R"; >; 
+float Shadow_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "SHADOW_COL_G"; >; 
+float Shadow_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "SHADOW_COL_B"; >; 
+float Spec_R : CONTROLOBJECT < string name = RimLight_Bone; string item = "SPECULAR_COL_R"; >; 
+float Spec_G : CONTROLOBJECT < string name = RimLight_Bone; string item = "SPECULAR_COL_G"; >; 
+float Spec_B : CONTROLOBJECT < string name = RimLight_Bone; string item = "SPECULAR_COL_B"; >; 
+

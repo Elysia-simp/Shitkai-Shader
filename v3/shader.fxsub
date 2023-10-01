@@ -41,18 +41,26 @@ vs_out vs_model (vs_in i)
 
     return o;
 }
+float time : TIME;
 
+#include <shared/Shitkai_controllers.fxsub>
 #include <Shared/Shitkai_Common.fxh>
 #include <shared/shitkai_outline.fxsub>
-#include <shared/Shitkai_controllers.fxsub>
+
 
 bool light_check : CONTROLOBJECT < string name = RimLight_Bone; >;
 float4x4 rim_bone : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_Rot"; >;
-float4x4 Head_pos: CONTROLOBJECT < string name = "(self)"; string item = "‚Ü‚Î‚½‚«"; >;
+float4x4 Head_pos: CONTROLOBJECT < string name = "(self)"; string item = "ï¿½Ü‚Î‚ï¿½ï¿½ï¿½"; >;
 
 float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 {
-    //cause i know my ass isnt writing i.func all day
+    float3 spec = float3(Spec_R, Spec_G, Spec_B);
+    float4 Shadow = float4(Shadow_R, Shadow_G, Shadow_B, 1.0); 
+    float3 rim_light = float3(Rim_Light_R, Rim_Light_G, Rim_Light_B);
+    float3 rim_shadow = float3(Rim_Shadow_R, Rim_Shadow_G, Rim_Shadow_B);
+    float rim_int = 1 + Rim_Intensity;
+
+
     float2 uv = i.uv;
     float2 uv2 = i.uv2;
     float4 vertex = i.vertex;
@@ -60,12 +68,29 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     float3 view = i.view;
 
     // float ndotl = dot(normal, -light_d) * 0.5 + 0.5;
-    //
 
-    float4 color = egColor;
+
+    // float2 global_time = uv;
+    #ifdef use_distortion
+    uv = Distortion(uv);
+    #endif
+
+    #ifdef additive_alpha
+
+    float2 uv_offset = Eyelight_Range * abs(sin(time * Eyelight_Speed)); // Adjust the amplitude as needed
+
+
+    uv += uv_offset;
+    // diffuse = tex2D(diffuseSampler, distorted_uv);
+    #endif
+
+
+    
+    float4 color_int = lerp(egColor, float4(Ambient_R, Ambient_G, Ambient_B, 1.0f), Ambient_Int);
+    float4 color = color_int;
     float4 u_xlat1 = 1;
     float4 diffuse = tex2D(diffuseSampler, uv);
-    float4 shadow = tex2D(ShadowSampler, uv) *  _SekaiShadowColor;
+    float4 shadow = tex2D(ShadowSampler, uv) *  (_SekaiShadowColor - Shadow );
     int u_xlati9 = _CharacterId;
     // u_xlat16_2.xyz = _SekaiCharacterSpecularColorArray[u_xlati9].www * _SekaiCharacterSpecularColorArray[u_xlati9].xyz;
     float4 htex = tex2D(HTexSampler, uv);
@@ -80,10 +105,11 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 
 
 
-    float3 u_xlat16_6 = Shitkai_Coloring(u_xlat1.xyz, u_xlati9, htex.x, diffuse.xyz);
+    float3 u_xlat16_6 = Shitkai_Coloring(u_xlat1.xyz, u_xlati9, htex.x, diffuse.xyz, Shadow);
     #ifdef additive_alpha
-    color.xyz = 1;
-    clip(diffuse.x - 0.45);
+    color.xyz = 1 * color_int;
+    float discard_check = diffuse - 0.45f;
+    if(discard_check < 0.0) discard;
     #endif
 
     //
@@ -91,7 +117,7 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     float3 lightDirection = (light_check) ? normalize(rim_bone._31_32_33) : light_d;
     float4 u_xlat3 = 1;
     // float3 u_xlat4 = 1;
-    u_xlat1.xzw = _SekaiRimLightColor.www * _SekaiRimLightColor.xyz;
+    u_xlat1.xzw = (_SekaiRimLightColor.www * rim_int) * (_SekaiRimLightColor.xyz + rim_light);
     u_xlat3.x = dot(normal, view);
     u_xlat3.z = dot(view, lightDirection);
     float4 u_xlat4 = dot(normal, normal);
@@ -114,7 +140,7 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     u_xlat20 = u_xlat12 * -2.0 + 3.0;
     u_xlat12 = u_xlat12 * u_xlat12;
     u_xlat12 = u_xlat12 * u_xlat20;
-    u_xlat5.xyz = _SekaiShadowRimLightColor.xyz * _SekaiShadowRimLightColor.www + (-u_xlat1.xzw);
+    u_xlat5.xyz = (_SekaiShadowRimLightColor.xyz + rim_shadow) * (_SekaiShadowRimLightColor.www * rim_int) + (-u_xlat1.xzw);
     u_xlat1.xzw = float3(u_xlat12.xxx) * u_xlat5.xyz + u_xlat1.xzw;
     u_xlat3.xz = max(u_xlat3.xz, float2(0.0, 0.0));
 
@@ -146,10 +172,8 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     u_xlat4.xyz = u_xlat1.xzw * vertex.yyy;
     u_xlat16_6.xyz = u_xlat1.xzw * vertex.yyy + u_xlat16_6.xyz;
 
-
-    //
     float4 u_xlatb3 = 0;
-    float3 u_xlat16_2 = _SekaiCharacterSpecularColor.www * _SekaiCharacterSpecularColor.xyz;
+    float3 u_xlat16_2 = _SekaiCharacterSpecularColor.www * (_SekaiCharacterSpecularColor.xyz + spec);
     float3 halffloatt = normalize(view + -light_d);
     u_xlat1.x = dot(halffloatt, normal);
     u_xlat1.x = max(u_xlat1.x, 0.0);
@@ -176,6 +200,10 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 
     color.xyz *= u_xlat16_6;
     // color.xyz = vertex.z;
+    #ifdef debug_distortion
+    color.xy = uv.xy;
+    color.z = 0;
+    #endif
     return color;
 }
 

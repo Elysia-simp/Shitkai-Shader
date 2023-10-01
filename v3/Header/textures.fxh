@@ -15,3 +15,9 @@ sampler ShadowSampler = sampler_state{texture = < ShadowTexture >; ADDRESSU = CL
 texture faceShadowTexture < string ResourceName = merge_strings("textures/face/", facemap); >;
 sampler faceShadowSampler = sampler_state{texture = < faceShadowTexture >; ADDRESSU = wrap; ADDRESSV = wrap;};
 #endif
+
+
+#ifdef use_distortion
+texture DistortionTexture < string ResourceName = merge_strings("textures/distortion/", distortion1); >;
+sampler DistortionSampler = sampler_state{texture = < DistortionTexture >; ADDRESSU = wrap; ADDRESSV = wrap;};
+#endif

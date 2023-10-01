@@ -2,6 +2,8 @@
 
 
 float4x4 head : CONTROLOBJECT < string name = "(self)"; string item = "頭"; >;
+
+
 float face_shading(in float2 uv)
 {
 
@@ -72,15 +74,13 @@ float Shitkai_Shadow(float ndotl, float Z){
 
     ndotl = saturate(ndotl);
 
-    // bool u_xlatb17 = ndotl>=_SekaiShadowThreshold;
-
     ndotl = step(ndotl, _SekaiShadowThreshold);
 
     return ndotl;
 }
 
 
-float3 Shitkai_Coloring(float3 u_xlat1, float u_xlati9, float htex, float3 diffuse){
+float3 Shitkai_Coloring(float3 u_xlat1, float u_xlati9, float htex, float3 diffuse, float4 S){
     float3 DefaultSkinColor = skinColorTable[u_xlati9];
     #ifdef _DefaultSkinColor
     DefaultSkinColor = _DefaultSkinColor;
@@ -97,8 +97,8 @@ float3 Shitkai_Coloring(float3 u_xlat1, float u_xlati9, float htex, float3 diffu
     #endif
 
     float3 u_xlat16_6;
-    float3 u_xlat4 = _SekaiShadowColor.xyz * Shadow1SkinColor.xyz;
-    float3 u_xlat5 = _SekaiShadowColor.xyz * Shadow1SkinColor.xyz;
+    float3 u_xlat4 = (_SekaiShadowColor.xyz - S) * Shadow1SkinColor.xyz;
+    float3 u_xlat5 = (_SekaiShadowColor.xyz - S) * Shadow1SkinColor.xyz;
     float u_xlat16_26 = u_xlat1.x + u_xlat1.x;
     u_xlat16_6.x = u_xlat1.x * 2.0 + -1.0;
 
@@ -122,4 +122,29 @@ float3 Shitkai_Coloring(float3 u_xlat1, float u_xlati9, float htex, float3 diffu
 
     return u_xlat16_6;
 }
+#ifdef use_distortion
+float2 Distortion(float2 uv){
+    float2 temp_uv = uv * float2(_DistortionTexTilingX, _DistortionTexTilingY);
 
+    float2 global_time = time * _DistortionFPS;
+    global_time = floor(global_time);
+    global_time = global_time / _DistortionFPS;
+
+    float2 distortion_scaled;
+    distortion_scaled.x =  global_time.x * _DistortionScrollX;
+    distortion_scaled.y =  global_time.x * _DistortionScrollY;
+
+    global_time = (-distortion_scaled.xy) * float2(float2(_DistortionScrollSpeed, _DistortionScrollSpeed)) + temp_uv.xy;
+
+    float2 distortion_samp = tex2D(DistortionSampler, global_time);
+    float2 distortion_map = distortion_samp.xy * float2(2.0, 2.0) + float2(-1.0, -1.0);
+
+    global_time.xy = distortion_map.xy + float2(_DistortionOffsetX, _DistortionOffsetY);
+    distortion_scaled.x = _DistortionIntensity * _DistortionIntensityX;
+    distortion_scaled.y = _DistortionIntensity * _DistortionIntensityY;
+    global_time.xy = global_time.xy * distortion_scaled.xy + uv.xy;
+
+
+    return global_time;
+}
+#endif
