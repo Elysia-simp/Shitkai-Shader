@@ -12,8 +12,8 @@
 #define distortion1 "eye_distortion.png"
 #define distortion2 "eye_distortion_2.png"
 
-#define _DistortionTexTilingX 0.05f
-#define _DistortionTexTilingY 0.05
+#define _DistortionTexTilingX 1.0f
+#define _DistortionTexTilingY 1.0
 
 #define _DistortionScrollSpeed 0.1f
 

@@ -77,7 +77,7 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 
     #ifdef additive_alpha
 
-    float2 uv_offset = Eyelight_Range * abs(sin(time * Eyelight_Speed)); // Adjust the amplitude as needed
+    float2 uv_offset = Eyelight_Range * abs(sin(time * Eyelight_Speed));
 
 
     uv += uv_offset;
@@ -98,7 +98,13 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     float faceshadow = 1;
     // if(use_subtexture) faceshadow = ;
     float ndotl = dot(-light_d, normal);
-    ndotl = (use_subtexture) ? 1-face_shading(uv2) * htex.z : (Shitkai_Shadow(ndotl, htex.z));
+
+
+    bool check_face = htex.z > 0.7;
+
+    ndotl = (check_face || use_subtexture) ? 1-face_shading(uv2) * htex.z : (Shitkai_Shadow(ndotl, htex.z));
+
+    
     // ndotl = ;
     u_xlat1.xyz = (-diffuse.xyz) + shadow;
     u_xlat1.xyz = (ndotl * faceshadow) * u_xlat1.xyz + diffuse.xyz;

@@ -13,7 +13,7 @@ Place _S texture in TOON in your model
 
 (v1 only) if your model's head has an accessory texture causing it to display wrong set that mesh to subtexture
 
-(v3 only) Place SDF texture somewhere in "Textures/Face" folder and set your face mesh to subtexture (incase context clues failed you, set everything else to any other sph type)
+(v3 only) Place SDF texture somewhere in "Textures/Face" folder and apply it to the material, if for some reason (Craft-egg moment) your lightmap is not proper, use sub_tex on the material as a failsafe
 
 For v1 rimlight you NEED to load the rimlight specified in your material file. Otherwise it won't load (it looks weird when defaulted to mmd light dir)
 
