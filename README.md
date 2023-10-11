@@ -12,9 +12,11 @@ for v3... Nobody else had done it
 
 This script is intended for models that are ripped from the game, so my support/help is very limited on this matter.
 
-# Bug reports
+# Contact
 
 Please make all bug reports in issues or in my DMS via CBTDWG on discord
+
+All inquires can also be made via my Discord (No middleman please)
 
 # Rules
 
