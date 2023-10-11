@@ -46,6 +46,8 @@ v1 does it automatically
 
 but since v3 requires a post shader in order for it to mask properly I cannot release this at this time, look into alternatives that allows for proper masking (AlphaEye will not work properly)
 
+v3 has more complex set ups that I'm entirely unskilled at to replicate at this point in time lol
+
 
 # Credits
 
