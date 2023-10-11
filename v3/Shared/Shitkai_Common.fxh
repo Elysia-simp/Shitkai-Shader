@@ -49,8 +49,8 @@ float face_shading(in float2 uv)
     }
 
 
-    // float shadow_step = step(angle, shadow) ;
-    float shadow_step = smoothstep(angle - (0.001f), angle + (0.001f), shadow);
+    float shadow_step = step(angle, shadow) ;
+    // float shadow_step = smoothstep(angle - (0.001f), angle + (0.001f), shadow);
     float facing_step = 0;
 
     #ifdef force_front_light

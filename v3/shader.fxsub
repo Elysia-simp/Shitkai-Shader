@@ -205,11 +205,7 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     u_xlat16_2.xyz = u_xlat16_2.xyz * u_xlat16_7.xyz + u_xlat3.xzw;
 
     color.xyz *= u_xlat16_6;
-    // color.xyz = vertex.z;
-    #ifdef debug_distortion
-    color.xy = uv.xy;
-    color.z = 0;
-    #endif
+
     return color;
 }
 
@@ -241,4 +237,13 @@ technique model_tech <string MMDPASS = "object"; >
         VertexShader = compile vs_3_0 edge_model();
         PixelShader = compile ps_3_0 ps_edge();
     }
+}
+
+
+technique tech_shadow <string MMDPass = "shadow";> // you don't need these
+{
+}
+
+technique tech_edge <string MMDPass = "edge";>
+{
 }

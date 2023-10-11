@@ -9,8 +9,9 @@
 #define use_distortion
 
 #define _DistortionFPS 12 
+
 #define distortion1 "eye_distortion.png"
-#define distortion2 "eye_distortion_2.png"
+
 
 #define _DistortionTexTilingX 1.0f
 #define _DistortionTexTilingY 1.0
@@ -49,11 +50,9 @@
 #define _SekaiShadowRimLightColor float4(0.5, 0.5, 0.5, 1.0)
 #define _SekaiRimLightFactor float4(200.0, 0.0, 1000.0, 0.015)
 #define _RimThreshold 0.5f
-
+#define _SekaiRimLightShadowSharpness 0.51f
 
 #define _SpecularPower 22.0f // not a lot of models use it?
 #define _SekaiCharacterSpecularColor float4(1.0f, 1.0f, 1.0f, 0.0f)
 
-
-#define _SekaiRimLightShadowSharpness 0.51f
-#include <shader.fxsub>////
+#include <shader.fxsub>

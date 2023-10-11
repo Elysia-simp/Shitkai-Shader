@@ -16,7 +16,7 @@ struct edge_out
     float2 uv           : TEXCOORD1;
 };
 
-float Outline_Scale(float4 pos)
+float Outline_Scale(float4 pos) // this is something the game DOESN'T do. cringe ass devs
 {
     float4 View = mul(pos, mul(model_world, mmd_view));
 
@@ -24,7 +24,7 @@ float Outline_Scale(float4 pos)
 
         if(mmd_p[3].w) // perspective check
     {
-        scale = 30; // perspective off
+        scale = 20; // perspective off
     } 
 
     return scale;
@@ -34,7 +34,14 @@ float Outline_Scale(float4 pos)
 edge_out edge_model (edge_in i)
 {
     edge_out o;
-    i.pos.xyz = i.pos.xyz + normalize(i.normal.xyz) * _OutlineWidth * i.vertexcolor.x * Outline_Scale(i.pos);
+    float3 cam_pos = mul(head_bone._31_32_33, mmd_cameraPosition[2]);
+    float outline_offset = 1;
+    if(cam_pos.z > 0) outline_offset = 0;
+    float offset = saturate((1-i.vertexcolor.z) + (outline_offset) + (_OutlineOffset));
+
+    float3 u_xlat2 = mmd_cameraPosition * float3(offset.xxx * i.vertexcolor.zzz);
+    // float3 u_xlat1 = u_xlat2 * i.vertexcolor.zzz + mmd_vp[2];
+    i.pos.xyz = (i.pos.xyz) + normalize(i.normal.xyz) * _OutlineWidth * i.vertexcolor.x * Outline_Scale(i.pos) * offset; // they use tangents as custom normals
     o.pos = mul(i.pos, mmd_wvp);
     o.vertex = i.vertexcolor;
     o.uv = i.uv;
