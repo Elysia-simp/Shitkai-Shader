@@ -16,8 +16,7 @@ bool use_spheremap;
 //mmd RGB lighting intake
 float4 egColor;
 
-float4x4 head_bone : CONTROLOBJECT < string name = "(self)"; string item = "light_link"; >;
-float4x4 light_bone : CONTROLOBJECT < string name = "(self)"; string item = "light_rotate"; >;
+float4x4 head_bone : CONTROLOBJECT < string name = "(self)"; string item = "頭"; >;
 
 //mmd light source
 float3 light_d : DIRECTION < string Object = "Light"; >;

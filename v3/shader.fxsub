@@ -50,7 +50,8 @@ float time : TIME;
 
 bool light_check : CONTROLOBJECT < string name = RimLight_Bone; >;
 float4x4 rim_bone : CONTROLOBJECT < string name = RimLight_Bone; string item = "Rim_Rot"; >;
-float4x4 Head_pos: CONTROLOBJECT < string name = "(self)"; string item = "�܂΂���"; >;
+
+bool ray_exists : CONTROLOBJECT < string name = "ray.x"; >;
 
 float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 {
@@ -206,6 +207,8 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
 
     color.xyz *= u_xlat16_6;
 
+    if(ray_exists) color.xyz *= 0.65f;
+    
     return color;
 }
 
