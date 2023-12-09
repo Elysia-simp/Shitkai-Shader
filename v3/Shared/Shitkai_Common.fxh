@@ -1,13 +1,11 @@
 #include<Shared/Colors.hlsl>
 
 
-float4x4 head : CONTROLOBJECT < string name = "(self)"; string item = "頭"; >;
-
 
 float face_shading(in float2 uv)
 {
 
-    light_d = mul(light_d, (float3x3)light_bone);
+
 
 
     // sample textures for both directions
