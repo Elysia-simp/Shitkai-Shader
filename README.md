@@ -4,10 +4,6 @@ For v1 all repositories were not that accurate
 
 for v3... Nobody else had done it
 
-# Prerequisites 
-
-(V3 only) Use [Manashiku's MMDGenshin_Helper_V2](https://github.com/Manashiku/MMDGenshin/releases) to generate some needed light IK bones for the face.
-
 # In regards to custom models
 
 This script is intended for models that are ripped from the game, so my support/help is very limited on this matter.
@@ -28,9 +24,9 @@ All inquires can also be made via my Discord (No middleman please)
 
 # Usage
 
-Place _H texture in SPH in your model
+Place \_H texture in SPH in your model
 
-Place _S texture in TOON in your model
+Place \_S texture in TOON in your model
 
 (v1 only) if your model's head has an accessory texture causing it to display wrong set that mesh to subtexture
 
@@ -47,7 +43,6 @@ v1 does it automatically
 but since v3 requires a post shader in order for it to mask properly I cannot release this at this time, look into alternatives that allows for proper masking (AlphaEye will not work properly)
 
 v3 has more complex set ups that I'm entirely unskilled at to replicate at this point in time lol
-
 
 # Credits
 
