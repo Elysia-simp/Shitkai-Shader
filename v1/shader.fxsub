@@ -45,6 +45,8 @@ vs_out vs_model ( vs_in i)
 bool light_check : CONTROLOBJECT < string name = RimLight_Bone; >;
 bool controller_check : CONTROLOBJECT < string name = "controller.pmx"; >;
 
+bool ray_exists : CONTROLOBJECT < string name = "ray.x"; >;
+
 float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : COLOR0
 {
     //you know damn well
@@ -78,6 +80,8 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool Stencil_enable) : CO
 
     out_col.xyz *= saturate(skin_col) + ((rim * (_RimCol + float3(Rim_R, Rim_G, Rim_B))) * max(i.vertex.y - Rim_Intensity, 0.0));
     
+    if(ray_exists) out_col.xyz *= 0.65f;
+
     if(Stencil_enable && i.vertex.z < 1)  discard;
     return out_col;
 }
