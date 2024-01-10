@@ -16,6 +16,9 @@ bool use_spheremap;
 //mmd RGB lighting intake
 float4 egColor;
 
+//DO NOT FUCKING DELETE THIS AJDSHF
+float4x4 head_bone : CONTROLOBJECT < string name = "(self)"; string item = "“ª"; >;
+
 //mmd light source
 float3 light_d : DIRECTION < string Object = "Light"; >;
 

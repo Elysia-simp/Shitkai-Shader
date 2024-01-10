@@ -6,7 +6,7 @@
 #define Eyelight_Speed 15
 #define Eyelight_Range 0.008
 
-#define use_distortion
+// #define use_distortion
 
 #define _DistortionFPS 12 
 
@@ -28,7 +28,7 @@
 #define _DistortionOffsetX 0.57f
 #define _DistortionOffsetY 0.57f
 
-// #define force_front_light // Only affects facemap lighting
+#define force_front_light // Only affects facemap lighting
 
 
 #define _OutlineWidth 0.001f
