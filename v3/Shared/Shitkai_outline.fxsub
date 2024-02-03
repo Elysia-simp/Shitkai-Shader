@@ -21,7 +21,7 @@ float Outline_Scale(float4 pos) // this is something the game DOESN'T do. cringe
     float4 View = mul(pos, mul(model_world, mmd_view));
 
     float scale = View.z / View.w * 0.75;
-
+    scale = clamp(scale, 1.0, 55.0);
         if(mmd_p[3].w) // perspective check
     {
         scale = 20; // perspective off
